@@ -1,4 +1,4 @@
-import sublime, sublime_plugin, os, json, subprocess, sys
+import sublime_plugin, os, json, subprocess, sys
 
 # Extends TextCommand so that run() receives a View to modify.
 class YouSaveMe(sublime_plugin.EventListener):
