@@ -9,12 +9,12 @@ def contains(value, items):
 
 # Extends TextCommand so that run() receives a View to modify.
 class YouSaveMe(sublime_plugin.EventListener):
-    def get_config_by_filetype(self, config_list, extension):
+    def get_config_by_extension(self, config_list, extension):
         return list(filter(lambda x: contains(extension, x["filetypes"]), config_list))
 
     def apply_config(self, project_directory, config_list, file_name):
         extension = os.path.splitext(file_name)[1][1:]
-        config_matches = self.get_config_by_filetype(config_list, extension)
+        config_matches = self.get_config_by_extension(config_list, extension)
         for config in config_matches:
             command = config["command"];
             command = command.replace("$filename", file_name).replace("$dir", project_directory)
