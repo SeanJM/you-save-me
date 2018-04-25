@@ -20,7 +20,6 @@ class YouSaveMe(sublime_plugin.EventListener):
             command = "cd {0} && {1}".format(project_directory, command)
             process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
-            returncode = process.wait()
             for line in process.stdout.readlines():
                 print(line.rstrip().decode('utf-8'))
                 sys.stdout.flush()
