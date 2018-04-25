@@ -3,7 +3,9 @@ import sublime_plugin, os, json, subprocess, sys
 config_names = [ ".yousaveme", ".yousaveme.json" ]
 
 def contains(value, items):
-    return len(list(filter(lambda y: y == value, items))) > 0
+    for x in items:
+        if x == value:
+            return True
 
 # Extends TextCommand so that run() receives a View to modify.
 class YouSaveMe(sublime_plugin.EventListener):
