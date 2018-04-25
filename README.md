@@ -1,6 +1,6 @@
 # How to use it
 
-Create a `.yousaveme.json` file in your project's root directory
+Create a `.yousaveme.json` or `.yousaveme` file in your project's root directory
 
 # Example configuration
 

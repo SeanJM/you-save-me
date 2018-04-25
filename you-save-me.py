@@ -1,13 +1,18 @@
 import sublime_plugin, os, json, subprocess, sys
 
+config_names = [ ".yousaveme", ".yousaveme.json" ]
+
+def contains(value, items):
+    return len(list(filter(lambda y: y == value, items))) > 0
+
 # Extends TextCommand so that run() receives a View to modify.
 class YouSaveMe(sublime_plugin.EventListener):
-    def get_config_by_filetype(self, config_list, filename_extension):
-        return list(filter(lambda x: len(list(filter(lambda y: y == filename_extension, x["filetypes"]))) > 0, config_list))
+    def get_config_by_filetype(self, config_list, extension):
+        return list(filter(lambda x: contains(extension, x["filetypes"]), config_list))
 
     def apply_config(self, project_directory, config_list, file_name):
-        filename_extension = os.path.splitext(file_name)[1][1:]
-        config_matches = self.get_config_by_filetype(config_list, filename_extension)
+        extension = os.path.splitext(file_name)[1][1:]
+        config_matches = self.get_config_by_filetype(config_list, extension)
         for config in config_matches:
             command = config["command"];
             command = command.replace("$filename", file_name).replace("$dir", project_directory)
@@ -25,10 +30,12 @@ class YouSaveMe(sublime_plugin.EventListener):
             return json.loads(config_string)
 
     def run_tasks(self, project_directory, file_name):
-        config_filename = os.path.join(project_directory, ".yousaveme.json")
-        if os.path.isfile(config_filename):
-            config_list = self.load_config(config_filename)
-            self.apply_config(project_directory, config_list, file_name)
+        for config_name in config_names:
+            config_filename = os.path.join(project_directory, config_name)
+            if os.path.isfile(config_filename):
+                config_list = self.load_config(config_filename)
+                self.apply_config(project_directory, config_list, file_name)
+                break
 
     def on_post_save(self, view):
         file_name = view.file_name()
