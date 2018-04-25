@@ -7,7 +7,6 @@ def contains(value, items):
         if x == value:
             return True
 
-# Extends TextCommand so that run() receives a View to modify.
 class YouSaveMe(sublime_plugin.EventListener):
     def get_config_by_extension(self, config_list, extension):
         return list(filter(lambda x: contains(extension, x["filetypes"]), config_list))
