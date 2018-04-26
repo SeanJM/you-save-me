@@ -6,8 +6,8 @@ Create a `.yousaveme.json` or `.yousaveme` file in your project's root directory
 
 Name|Type|Purpose
 -|-|-
-`include`|glob|Will **include** the matching file when the command is performed
-`exclude`|glob|Will **exclude** the matching file when the command is performed
+`include`|`Array[glob]` or `glob`|Will **include** the matching file when the command is performed
+`exclude`|`Array[glob]` or `glob`|Will **exclude** the matching file when the command is performed
 `command`|shell command|The command which will be performed on an included filename
 
 # Variables
@@ -19,6 +19,8 @@ Name|Value
 
 # Example configuration
 
+###### Using a glob string to match filenames
+
 ```json
 [
   {
@@ -28,6 +30,29 @@ Name|Value
   {
     "include": "*.json",
     "exclude": "*/package.json",
+    "command": "json-format $filename"
+  }
+]
+```
+
+###### Using a glob array to match filenames
+
+```json
+[
+  {
+    "include": [
+      "*.tsx",
+      "*.ts"
+    ],
+    "command": "tslint --fix $filename"
+  },
+  {
+    "include": [
+      "*.json"
+    ],
+    "exclude": [
+      "*/package.json"
+    ],
     "command": "json-format $filename"
   }
 ]

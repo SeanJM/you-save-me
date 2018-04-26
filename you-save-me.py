@@ -2,6 +2,18 @@ import sublime_plugin, os, json, subprocess, sys, fnmatch
 
 config_names = [ ".yousaveme", ".yousaveme.json" ]
 
+def fnmatch_list(file_name, match):
+    if isinstance(match, str):
+        glob_list = match.split(",")
+    else:
+        glob_list = match
+
+    for glob in glob_list:
+        if fnmatch.fnmatch(file_name, glob.strip()):
+            return True
+
+    return False
+
 class YouSaveMe(sublime_plugin.EventListener):
     def get_config_by_fnmatch(self, config_list, file_name):
         config_match = []
@@ -11,10 +23,10 @@ class YouSaveMe(sublime_plugin.EventListener):
             excluded = False
 
             if "include" in config:
-                included = fnmatch.fnmatch(file_name, config["include"])
+                included = fnmatch_list(file_name, config["include"])
 
             if "exclude" in config:
-                excluded = fnmatch.fnmatch(file_name, config["exclude"])
+                excluded = fnmatch_list(file_name, config["exclude"])
 
             if (included == True) and (excluded == False):
                 config_match.append(config)
