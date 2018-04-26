@@ -5,7 +5,7 @@ Create a `.yousaveme.json` or `.yousaveme` file in your project's root directory
 # Configuration options
 
 Name|Type|Purpose
--|-
+-|-|-
 `include`|glob|Will **include** the matching file when the command is performed
 `exclude`|glob|Will **exclude** the matching file when the command is performed
 `command`|shell command|The command which will be performed on an included filename
