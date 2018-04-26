@@ -1,22 +1,31 @@
-import sublime_plugin, os, json, subprocess, sys
+import sublime_plugin, os, json, subprocess, sys, fnmatch
 
 config_names = [ ".yousaveme", ".yousaveme.json" ]
 
-def contains(value, items):
-    for x in items:
-        if x == value:
-            return True
-
 class YouSaveMe(sublime_plugin.EventListener):
-    def get_config_by_extension(self, config_list, extension):
-        return list(filter(lambda x: contains(extension, x["filetypes"]), config_list))
+    def get_config_by_fnmatch(self, config_list, file_name):
+        config_match = []
+
+        for config in config_list:
+            included = True
+            excluded = False
+
+            if "include" in config:
+                included = fnmatch.fnmatch(file_name, config["include"])
+
+            if "exclude" in config:
+                excluded = fnmatch.fnmatch(file_name, config["exclude"])
+
+            if (included == True) and (excluded == False):
+                config_match.append(config)
+
+        return config_match
 
     def apply_config(self, project_directory, config_list, file_name):
-        extension = os.path.splitext(file_name)[1][1:]
-        config_matches = self.get_config_by_extension(config_list, extension)
+        config_matches = self.get_config_by_fnmatch(config_list, file_name)
         for config in config_matches:
             command = config["command"];
-            command = command.replace("$filename", file_name).replace("$dir", project_directory)
+            command = command.replace("$filename", file_name).replace("$project", project_directory)
             command = "cd {0} && {1}".format(project_directory, command)
             process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
